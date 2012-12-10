@@ -1,0 +1,116 @@
+<html manifest="manifest.dat">
+<head>
+    <title>Just Time Me Please... d</title>
+    <meta name="viewport" content="user-scalable=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="stopwatch.js"></script>    
+    <script type="text/javascript">
+		
+		var count_me_down = [];
+		
+		function ticker()
+		{
+			for (task in count_me_down)
+			{
+				console.log("Task.."+task);
+				if(count_me_down[task] > 0)
+				{
+					count_me_down[task] -= 1;
+					break;
+				}
+				else
+				{
+					if(count_me_down[task] == 0)
+					{
+					  alarm.play();
+					  count_me_down[task]-=1;
+					}
+				}
+			}
+			visualize_count_downs();
+		}
+		
+		$(document).ready(function() {
+  		// Handler for .ready() called.
+  		window.setInterval("ticker()",1000);
+
+		});
+		function add_countdown(task,time)
+		{
+			count_me_down[task] = parseFloat(time*60);
+		}
+		
+		function visualize_count_downs(){
+			$("#timers_area").empty();
+			for (task in count_me_down)
+			{
+			  time = count_me_down[task];
+			  $("#timers_area").append("<div id="+task+"><span><label>"+task+"</labal><label id='"+task+"_time'>: "+time+"</labal></span></div>");
+			}
+		}
+		
+		function parse_times()
+		{
+			var times = [];
+			var entries = $("#time_input").val().split("\n");
+			for (i in entries)
+			{
+				var entry = entries[i].split(",");
+				times.push({'task':entry[0],'time':entry[1]});
+			}
+			return times;
+		}
+		function start_timers()
+		{
+			console.log("starting timers!!!!");
+			var times = parse_times();
+			for(i in times)
+			{
+				add_countdown(times[i]['task'],times[i]['time']);
+			}
+			console.log(times);
+		}
+	</script>
+    <!-- <link rel="stylesheet" href="stopwatch.css" />-->
+</head>
+<body id="body">
+<div>
+	<div id="input boxes">
+	  <textarea rows="10" id="time_input"></textarea>
+	  <input type="button" value="START" onclick="start_timers()"/>
+	</div>
+	
+	<div id="timers_area">
+		
+	</div>
+	
+	<!--
+    <div id="container" class="container">
+        <div id="hours" class="numbers"></div>
+        <div id="sep1" class="numbers">:</div>
+        <div id="minutes" class="numbers"></div>
+        <div id="sep2" class="numbers">:</div>
+        <div id="seconds" class="numbers"></div>    
+    </div>
+    <div id="stopwatch" class="controls" onClick="myNameSpace.stopWatchClicked()">Stopwatch</div>
+    <div id="timer" class="controls" onClick="myNameSpace.timerClicked()">Timer</div>
+    <div id="startButton" class="controls" onClick="myNameSpace.startTime()">Start</div>
+    <div id="stopButton" class="controls" onClick="myNameSpace.resetTime()">Reset</div>
+    <div id="arrowDownHour" class="nav" onClick="myNameSpace.arrowClicked(hours,false)">&#9660;</div>
+    <div id="arrowUpHour" class="nav" onClick="myNameSpace.arrowClicked(hours,true)">&#9650;</div>
+    <div id="arrowDownMin" class="nav" onClick="myNameSpace.arrowClicked(minutes,false)">&#9660;</div>
+    <div id="arrowUpMin" class="nav" onClick="myNameSpace.arrowClicked(minutes,true)">&#9650;</div>
+    <div id="arrowDownSec" class="nav" onClick="myNameSpace.arrowClicked(seconds,false)">&#9660;</div>
+    <div id="arrowUpSec" class="nav" onClick="myNameSpace.arrowClicked(seconds,true)">&#9650;</div>
+    <div class="title">A simple stopwatch and countdown timer.</div>
+    <div id="about" class="about" onMouseOver="myNameSpace.aboutOver()" onMouseOut="myNameSpace.aboutOut()">i</div>
+    <div id="links" class="links"><a href="http://www.royevansia.com" target="_blank">www.royevansia.com</a> | <img  src="res/twitter_newbird_white.png" height="12px" alt="Twitter" onClick="window.location='http://twitter.com/pr00t'" /></div>
+   -->
+    <audio id="alarm" preload="auto">
+    	<source src="res/alarm.aac" type="audio/aac" />
+        <source src="res/alarm.wav" type="audio/wav" />
+    	Your browser does not support HTML5 audio
+    </audio>
+</div>
+</body>
+</html>

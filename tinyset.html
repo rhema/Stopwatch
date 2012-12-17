@@ -12,7 +12,7 @@
 		{
 			for (task in count_me_down)
 			{
-				console.log("Task.."+task);
+				//console.log("Task.."+task);
 				if(count_me_down[task] > 0)
 				{
 					count_me_down[task] -= 1;
@@ -31,6 +31,20 @@
 		}
 		
 		$(document).ready(function() {
+			
+		function save()
+		{
+			localStorage.setItem("time_input", $("#time_input").val());
+		}	
+		
+		$("#time_input").val(localStorage.getItem("time_input"));
+		
+		$("#time_input").keyup(function(){
+			save();
+		});
+		
+		
+		
   		// Handler for .ready() called.
   		window.setInterval("ticker()",1000);
 
@@ -45,7 +59,10 @@
 			for (task in count_me_down)
 			{
 			  time = count_me_down[task];
-			  $("#timers_area").append("<div id="+task+"><span><label>"+task+"</labal><label id='"+task+"_time'>: "+time+"</labal></span></div>");
+			  $("#timers_area").append("<div id=\""+task+"\"><span id='spanme' class='spanner'><label>"+task+"</labal><label id='"+task+"_time'>: "+time+"</labal></span></div>");
+			  var add = 50-Math.min(time,50);
+			  
+			  $("#spanme").css("background-color","rgb("+(add+200)+",200,200)");
 			}
 		}
 		
@@ -72,8 +89,16 @@
 		}
 	</script>
     <!-- <link rel="stylesheet" href="stopwatch.css" />-->
+    
+    <style type="text/css">
+  	body {
+    background-color: #DDDDDD 
+    }
+    
+    </style>
 </head>
 <body id="body">
+	<div><p>Enter tasks as text and minute pairs spearated by newlines.</p></div>
 <div>
 	<div id="input boxes">
 	  <textarea rows="10" id="time_input"></textarea>
